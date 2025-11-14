@@ -149,6 +149,9 @@ public class Player {
     
     @Column(name = "nba_fantasy_pts")
     private Double nbaFantasyPts;  // NBA fantasy points
+
+    @Column(name = "headshot")
+    private String headshot;
     
     // Default constructor required by JPA
     public Player() {
@@ -160,7 +163,7 @@ public class Player {
                   Double fgm, Double fga, Double fgPct, Double fg3m, Double fg3a, Double fg3Pct,
                   Double ftm, Double fta, Double ftPct, Double oreb, Double dreb, Double reb,
                   Double ast, Double tov, Double stl, Double blk, Double pf, Double pts,
-                  Double plusMinus, Double nbaFantasyPts) {
+                  Double plusMinus, Double nbaFantasyPts, String headshot) {
         this.playerId = playerId;
         this.playerName = playerName;
         this.teamId = teamId;
@@ -191,6 +194,7 @@ public class Player {
         this.pts = pts;
         this.plusMinus = plusMinus;
         this.nbaFantasyPts = nbaFantasyPts;
+        this.headshot = headshot;
     }
     
     // Getters and Setters
@@ -432,6 +436,13 @@ public class Player {
     
     public void setNbaFantasyPts(Double nbaFantasyPts) {
         this.nbaFantasyPts = nbaFantasyPts;
+    }
+
+    public String getHeadshot(){
+        return headshot;
+    }
+    public void setHeadshot(String headshot){
+        this.headshot = headshot;
     }
     
     @Override

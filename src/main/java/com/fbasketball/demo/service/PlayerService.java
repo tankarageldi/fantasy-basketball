@@ -99,6 +99,7 @@ public Player updatePlayer(Long playerId, Player playerDetails) {
     existingPlayer.setPts(playerDetails.getPts());
     existingPlayer.setPlusMinus(playerDetails.getPlusMinus());
     existingPlayer.setNbaFantasyPts(playerDetails.getNbaFantasyPts());
+    existingPlayer.setHeadshot(playerDetails.getHeadshot());
     
     return playerRepository.save(existingPlayer);
 }

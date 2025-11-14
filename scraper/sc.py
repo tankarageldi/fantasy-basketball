@@ -160,6 +160,8 @@ def upsert_to_supabase(df, supabase: Client):
         print(f"✗ Error upserting data: {e}")
 
 
+
+
 if __name__ == "__main__":
     url: str = os.environ.get("SUPABASE_URL")
     key: str = os.environ.get("SUPABASE_KEY")
@@ -173,6 +175,7 @@ if __name__ == "__main__":
     
     # Fetch NBA stats
     df = season_averages()
+
     
     if df.empty:
         print("✗ No data fetched. Exiting.")
@@ -180,5 +183,15 @@ if __name__ == "__main__":
     
     # Upsert to Supabase
     upsert_to_supabase(df, supabase)
+
+    # Get all players
+    # players = supabase.table('players').select('player_id').execute()
+
+    # Update each player's headshot URL
+    # for player in players.data:
+    #     headshot_url = f"https://cdn.nba.com/headshots/nba/latest/260x190/{player['player_id']}.png"
+    #     supabase.table('players').update({
+    #         'headshot': headshot_url
+    #     }).eq('player_id', player['player_id']).execute()
     
-    print("\n✓ Done!")
+    # print("\n✓ Done!")

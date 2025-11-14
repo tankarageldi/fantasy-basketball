@@ -5,13 +5,13 @@ GET http://localhost:8080/api/players
 GET http://localhost:8080/api/players/count
 
 ### Search for LeBron
-GET http://localhost:8080/api/players/search?name=lebron
+GET http://localhost:8080/api/players/search?name=jalen
 
 ### Search for Curry
 GET http://localhost:8080/api/players/search?name=curry
 
 ### Search for Durant
-GET http://localhost:8080/api/players/search?name=durant
+GET http://localhost:8080/api/players/search?name=precious
 
 ### Search for Giannis
 GET http://localhost:8080/api/players/search?name=giannis
