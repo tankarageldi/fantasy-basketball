@@ -1,9 +1,15 @@
+Deployed spring app on railway. 
+spring - supabase connection works.
+
+
 TODO : 
-- NEXT.JS FRONTEND 
 - USE AWS TO RUN THE SCRAPER EVERY MORNING
 - HOST FRONTEND ON VERCEL. 
-- SECURE YOUR DATABASE WITH RLS I THINK SEARCH IT UP.
-- GET EMAILS IF THE AWS FAILS. 
-- DEPLOY SPRINGBOOT ON AWS AS WELL.
+- make the stats table 
+- display headshots next to stats table.
+- make daily fantasy leaders chart landing page. 
+- add nba logo on the app. 
+- create teams page, with dropdown on each team with a list showing the teams fantasy point per game leaders. 
 - UPLOAD THE WHOLE PROJECT AND GET MOST IMPORTANT INTERVIEW POINTS DOCUMENT
 - WRITE A SIMPLE README.md 
+

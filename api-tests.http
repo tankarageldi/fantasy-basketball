@@ -1,38 +1,38 @@
 ### Get all players
-GET http://localhost:8080/api/players
+GET http://fantasy-basketball-production.up.railway.app/api/players
 
 ### Get player count
-GET http://localhost:8080/api/players/count
+GET http://fantasy-basketball-production.up.railway.app/api/players/count
 
 ### Search for LeBron
-GET http://localhost:8080/api/players/search?name=jalen
+GET http://fantasy-basketball-production.up.railway.app/api/players/search?name=jalen
 
 ### Search for Curry
-GET http://localhost:8080/api/players/search?name=curry
+GET http://fantasy-basketball-production.up.railway.app/api/players/search?name=curry
 
 ### Search for Durant
-GET http://localhost:8080/api/players/search?name=precious
+GET http://fantasy-basketball-production.up.railway.app/api/players/search?name=precious
 
 ### Search for Giannis
-GET http://localhost:8080/api/players/search?name=giannis
+GET http://fantasy-basketball-production.up.railway.app/api/players/search?name=giannis
 
 ### Get Lakers roster
-GET http://localhost:8080/api/players/team/LAL
+GET http://fantasy-basketball-production.up.railway.app/api/players/team/LAL
 
 ### Get Warriors roster
-GET http://localhost:8080/api/players/team/GSW
+GET http://fantasy-basketball-production.up.railway.app/api/players/team/GSW
 
 ### Get Celtics roster
-GET http://localhost:8080/api/players/team/BOS
+GET http://fantasy-basketball-production.up.railway.app/api/players/team/BOS
 
 ### Get player by ID (LeBron James - ID: 2544)
-GET http://localhost:8080/api/players/2544
+GET http://fantasy-basketball-production.up.railway.app/api/players/2544
 
 ### Get top 10 fantasy players
-GET http://localhost:8080/api/players/top-fantasy?limit=10
+GET http://fantasy-basketball-production.up.railway.app/api/players/top-fantasy?limit=10
 
 ### Get top 20 scorers
-GET http://localhost:8080/api/players/top-scorers?limit=20
+GET http://fantasy-basketball-production.up.railway.app/api/players/top-scorers?limit=20
 
 ### Get top 15 efficient shooters
-GET http://localhost:8080/api/players/efficient-shooters?limit=15
+GET http://fantasy-basketball-production.up.railway.app/api/players/efficient-shooters?limit=15
