@@ -2,161 +2,204 @@ package com.fbasketball.demo.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 /**
- * Player entity representing an NBA player
- * Contains both JPA annotations (for database mapping) and validation annotations (for input validation)
+ * Player entity representing an NBA player with stats from NBA.com
+ * Column names match exactly with the scraped data from stats.nba.com
  */
 @Entity
-@Table(name = "players",
-    uniqueConstraints = {
-        // Database constraint: Ensure no duplicate player name + jersey number combinations
-        @UniqueConstraint(columnNames = {"player_name", "jersey_number"}, 
-                         name = "uk_player_name_jersey")
-    }
-)
+@Table(name = "players")
 public class Player {
     
+    // Using PLAYER_ID from NBA as the primary key (no auto-generation needed)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @NotNull(message = "Player ID is required")
+    @Column(name = "player_id")
+    private Long playerId;
     
-    // APPLICATION VALIDATION: @NotBlank ensures non-null, non-empty, non-whitespace
-    // DATABASE VALIDATION: nullable = false (NOT NULL constraint), length = 100 (VARCHAR limit)
-    @NotBlank(message = "Player name is required and cannot be empty")
+    @NotBlank(message = "Player name is required")
     @Size(min = 2, max = 100, message = "Player name must be between 2 and 100 characters")
     @Column(name = "player_name", nullable = false, length = 100)
     private String playerName;
     
-    @NotBlank(message = "Team name is required and cannot be empty")
-    @Size(min = 2, max = 50, message = "Team name must be between 2 and 50 characters")
-    @Column(nullable = false, length = 50)
-    private String team;
+    @Column(name = "team_id")
+    private Long teamId;
     
-    @NotBlank(message = "Position is required and cannot be empty")
-    @Size(min = 1, max = 5, message = "Position must be between 1 and 5 characters")
-    @Column(nullable = false, length = 5)
-    private String position;
+    @NotBlank(message = "Team abbreviation is required")
+    @Size(min = 2, max = 5, message = "Team abbreviation must be between 2 and 5 characters")
+    @Column(name = "team_abbreviation", nullable = false, length = 5)
+    private String teamAbbreviation;
     
-    // APPLICATION VALIDATION: @Min and @Max for range checking
-    // DATABASE VALIDATION: nullable = false (NOT NULL), CHECK constraint added via SQL
-    @NotNull(message = "Jersey number is required")
-    @Min(value = 0, message = "Jersey number must be at least 0")
-    @Max(value = 99, message = "Jersey number cannot exceed 99")
-    @Column(name = "jersey_number", nullable = false)
-    private Integer jerseyNumber;
+    @Min(value = 0, message = "Age cannot be negative")
+    @Column(name = "age")
+    private Double age;
     
-    // All stats validated at application level with @Min(0)
-    // Database level validation added via CHECK constraints in SQL
-    @NotNull(message = "Points per game is required")
-    @Min(value = 0, message = "Points per game cannot be negative")
-    @Column(name = "points_per_game", nullable = false)
-    private Double pointsPerGame;
+    // Games and Win/Loss stats
+    @Min(value = 0, message = "Games played cannot be negative")
+    @Column(name = "gp")
+    private Double gp;  // games played
     
-    @NotNull(message = "Assists per game is required")
-    @Min(value = 0, message = "Assists per game cannot be negative")
-    @Column(name = "assists_per_game", nullable = false)
-    private Double assistsPerGame;
+    @Min(value = 0, message = "Wins cannot be negative")
+    @Column(name = "w")
+    private Double w;  // wins
     
-    @NotNull(message = "Rebounds per game is required")
-    @Min(value = 0, message = "Rebounds per game cannot be negative")
-    @Column(name = "rebounds_per_game", nullable = false)
-    private Double reboundsPerGame;
+    @Min(value = 0, message = "Losses cannot be negative")
+    @Column(name = "l")
+    private Double l;  // losses
     
-    @NotNull(message = "Steals per game is required")
-    @Min(value = 0, message = "Steals per game cannot be negative")
-    @Column(name = "steals_per_game", nullable = false)
-    private Double stealsPerGame;
+    @DecimalMin(value = "0.0", message = "Win percentage must be at least 0.0")
+    @DecimalMax(value = "1.0", message = "Win percentage cannot exceed 1.0")
+    @Column(name = "w_pct")
+    private Double wPct;  // win percentage
     
-    @NotNull(message = "Blocks per game is required")
-    @Min(value = 0, message = "Blocks per game cannot be negative")
-    @Column(name = "blocks_per_game", nullable = false)
-    private Double blocksPerGame;
+    @Min(value = 0, message = "Minutes cannot be negative")
+    @Column(name = "min")
+    private Double min;  // average minutes per game
     
-    @NotNull(message = "Turnovers per game is required")
-    @Min(value = 0, message = "Turnovers per game cannot be negative")
-    @Column(name = "turnovers_per_game", nullable = false)
-    private Double turnoversPerGame;
+    // Field Goal stats
+    @Min(value = 0, message = "Field goals made cannot be negative")
+    @Column(name = "fgm")
+    private Double fgm;  // field goals made
     
-    // Shooting percentages must be between 0.0 (0%) and 1.0 (100%)
-    @NotNull(message = "Field goal percentage is required")
+    @Min(value = 0, message = "Field goals attempted cannot be negative")
+    @Column(name = "fga")
+    private Double fga;  // field goals attempted
+    
     @DecimalMin(value = "0.0", message = "Field goal percentage must be at least 0.0")
     @DecimalMax(value = "1.0", message = "Field goal percentage cannot exceed 1.0")
-    @Column(name = "field_goal_percentage", nullable = false)
-    private Double fieldGoalPercentage;
+    @Column(name = "fg_pct")
+    private Double fgPct;  // field goal percentage
     
-    @NotNull(message = "Three point percentage is required")
-    @DecimalMin(value = "0.0", message = "Three point percentage must be at least 0.0")
-    @DecimalMax(value = "1.0", message = "Three point percentage cannot exceed 1.0")
-    @Column(name = "three_point_percentage", nullable = false)
-    private Double threePointPercentage;
+    // Three-Point stats
+    @Min(value = 0, message = "Three-pointers made cannot be negative")
+    @Column(name = "fg3m")
+    private Double fg3m;  // 3-pointers made
     
-    @NotNull(message = "Free throw percentage is required")
+    @Min(value = 0, message = "Three-pointers attempted cannot be negative")
+    @Column(name = "fg3a")
+    private Double fg3a;  // 3-pointers attempted
+    
+    @DecimalMin(value = "0.0", message = "Three-point percentage must be at least 0.0")
+    @DecimalMax(value = "1.0", message = "Three-point percentage cannot exceed 1.0")
+    @Column(name = "fg3_pct")
+    private Double fg3Pct;  // 3-point percentage
+    
+    // Free Throw stats
+    @Min(value = 0, message = "Free throws made cannot be negative")
+    @Column(name = "ftm")
+    private Double ftm;  // free throws made
+    
+    @Min(value = 0, message = "Free throws attempted cannot be negative")
+    @Column(name = "fta")
+    private Double fta;  // free throws attempted
+    
     @DecimalMin(value = "0.0", message = "Free throw percentage must be at least 0.0")
     @DecimalMax(value = "1.0", message = "Free throw percentage cannot exceed 1.0")
-    @Column(name = "free_throw_percentage", nullable = false)
-    private Double freeThrowPercentage;
+    @Column(name = "ft_pct")
+    private Double ftPct;  // free throw percentage
     
-    @NotNull(message = "Fantasy points per game is required")
-    @Min(value = 0, message = "Fantasy points per game cannot be negative")
-    @Column(name = "fantasy_points_per_game", nullable = false)
-    private Double fantasyPointsPerGame;
+    // Rebound stats
+    @Min(value = 0, message = "Offensive rebounds cannot be negative")
+    @Column(name = "oreb")
+    private Double oreb;  // offensive rebounds
     
-    @NotNull(message = "Fantasy ranking is required")
-    @Min(value = 0, message = "Fantasy ranking cannot be negative")
-    @Column(name = "fantasy_ranking", nullable = false)
-    private Integer fantasyRanking;
-
-    @Min(value = 0, message = "Games played cannot be negative")
-    @Column(name = "games_played")
-    private Integer gamesPlayed;
+    @Min(value = 0, message = "Defensive rebounds cannot be negative")
+    @Column(name = "dreb")
+    private Double dreb;  // defensive rebounds
+    
+    @Min(value = 0, message = "Total rebounds cannot be negative")
+    @Column(name = "reb")
+    private Double reb;  // total rebounds
+    
+    // Other stats
+    @Min(value = 0, message = "Assists cannot be negative")
+    @Column(name = "ast")
+    private Double ast;  // assists
+    
+    @Min(value = 0, message = "Turnovers cannot be negative")
+    @Column(name = "tov")
+    private Double tov;  // turnovers
+    
+    @Min(value = 0, message = "Steals cannot be negative")
+    @Column(name = "stl")
+    private Double stl;  // steals
+    
+    @Min(value = 0, message = "Blocks cannot be negative")
+    @Column(name = "blk")
+    private Double blk;  // blocks
+    
+    @Min(value = 0, message = "Personal fouls cannot be negative")
+    @Column(name = "pf")
+    private Double pf;  // personal fouls
+    
+    @Min(value = 0, message = "Points cannot be negative")
+    @Column(name = "pts")
+    private Double pts;  // points per game
+    
+    @Column(name = "plus_minus")
+    private Double plusMinus;  // plus/minus rating
+    
+    @Column(name = "nba_fantasy_pts")
+    private Double nbaFantasyPts;  // NBA fantasy points
     
     // Default constructor required by JPA
     public Player() {
     }
     
-    // Constructor for creating new Player objects
-    public Player(String playerName, String team, String position, Integer jerseyNumber,
-                  Double pointsPerGame, Double assistsPerGame, Double reboundsPerGame,
-                  Double stealsPerGame, Double blocksPerGame, Double turnoversPerGame,
-                  Double fieldGoalPercentage, Double threePointPercentage, Double freeThrowPercentage,
-                  Double fantasyPointsPerGame, Integer fantasyRanking) {
+    // Full constructor
+    public Player(Long playerId, String playerName, Long teamId, String teamAbbreviation,
+                  Double age, Double gp, Double w, Double l, Double wPct, Double min,
+                  Double fgm, Double fga, Double fgPct, Double fg3m, Double fg3a, Double fg3Pct,
+                  Double ftm, Double fta, Double ftPct, Double oreb, Double dreb, Double reb,
+                  Double ast, Double tov, Double stl, Double blk, Double pf, Double pts,
+                  Double plusMinus, Double nbaFantasyPts) {
+        this.playerId = playerId;
         this.playerName = playerName;
-        this.team = team;
-        this.position = position;
-        this.jerseyNumber = jerseyNumber;
-        this.pointsPerGame = pointsPerGame;
-        this.assistsPerGame = assistsPerGame;
-        this.reboundsPerGame = reboundsPerGame;
-        this.stealsPerGame = stealsPerGame;
-        this.blocksPerGame = blocksPerGame;
-        this.turnoversPerGame = turnoversPerGame;
-        this.fieldGoalPercentage = fieldGoalPercentage;
-        this.threePointPercentage = threePointPercentage;
-        this.freeThrowPercentage = freeThrowPercentage;
-        this.fantasyPointsPerGame = fantasyPointsPerGame;
-        this.fantasyRanking = fantasyRanking;
+        this.teamId = teamId;
+        this.teamAbbreviation = teamAbbreviation;
+        this.age = age;
+        this.gp = gp;
+        this.w = w;
+        this.l = l;
+        this.wPct = wPct;
+        this.min = min;
+        this.fgm = fgm;
+        this.fga = fga;
+        this.fgPct = fgPct;
+        this.fg3m = fg3m;
+        this.fg3a = fg3a;
+        this.fg3Pct = fg3Pct;
+        this.ftm = ftm;
+        this.fta = fta;
+        this.ftPct = ftPct;
+        this.oreb = oreb;
+        this.dreb = dreb;
+        this.reb = reb;
+        this.ast = ast;
+        this.tov = tov;
+        this.stl = stl;
+        this.blk = blk;
+        this.pf = pf;
+        this.pts = pts;
+        this.plusMinus = plusMinus;
+        this.nbaFantasyPts = nbaFantasyPts;
     }
     
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Long getPlayerId() {
+        return playerId;
     }
     
-    public void setId(Long id) {
-        this.id = id;
+    public void setPlayerId(Long playerId) {
+        this.playerId = playerId;
     }
     
     public String getPlayerName() {
@@ -167,123 +210,239 @@ public class Player {
         this.playerName = playerName;
     }
     
-    public String getTeam() {
-        return team;
+    public Long getTeamId() {
+        return teamId;
     }
     
-    public void setTeam(String team) {
-        this.team = team;
+    public void setTeamId(Long teamId) {
+        this.teamId = teamId;
     }
     
-    public String getPosition() {
-        return position;
+    public String getTeamAbbreviation() {
+        return teamAbbreviation;
     }
     
-    public void setPosition(String position) {
-        this.position = position;
+    public void setTeamAbbreviation(String teamAbbreviation) {
+        this.teamAbbreviation = teamAbbreviation;
     }
     
-    public Integer getJerseyNumber() {
-        return jerseyNumber;
+    public Double getAge() {
+        return age;
     }
     
-    public void setJerseyNumber(Integer jerseyNumber) {
-        this.jerseyNumber = jerseyNumber;
+    public void setAge(Double age) {
+        this.age = age;
     }
     
-    public Double getPointsPerGame() {
-        return pointsPerGame;
+    public Double getGp() {
+        return gp;
     }
     
-    public void setPointsPerGame(Double pointsPerGame) {
-        this.pointsPerGame = pointsPerGame;
+    public void setGp(Double gp) {
+        this.gp = gp;
     }
     
-    public Double getAssistsPerGame() {
-        return assistsPerGame;
+    public Double getW() {
+        return w;
     }
     
-    public void setAssistsPerGame(Double assistsPerGame) {
-        this.assistsPerGame = assistsPerGame;
+    public void setW(Double w) {
+        this.w = w;
     }
     
-    public Double getReboundsPerGame() {
-        return reboundsPerGame;
+    public Double getL() {
+        return l;
     }
     
-    public void setReboundsPerGame(Double reboundsPerGame) {
-        this.reboundsPerGame = reboundsPerGame;
+    public void setL(Double l) {
+        this.l = l;
     }
     
-    public Double getStealsPerGame() {
-        return stealsPerGame;
+    public Double getWPct() {
+        return wPct;
     }
     
-    public void setStealsPerGame(Double stealsPerGame) {
-        this.stealsPerGame = stealsPerGame;
+    public void setWPct(Double wPct) {
+        this.wPct = wPct;
     }
     
-    public Double getBlocksPerGame() {
-        return blocksPerGame;
+    public Double getMin() {
+        return min;
     }
     
-    public void setBlocksPerGame(Double blocksPerGame) {
-        this.blocksPerGame = blocksPerGame;
+    public void setMin(Double min) {
+        this.min = min;
     }
     
-    public Double getTurnoversPerGame() {
-        return turnoversPerGame;
+    public Double getFgm() {
+        return fgm;
     }
     
-    public void setTurnoversPerGame(Double turnoversPerGame) {
-        this.turnoversPerGame = turnoversPerGame;
+    public void setFgm(Double fgm) {
+        this.fgm = fgm;
     }
     
-    public Double getFieldGoalPercentage() {
-        return fieldGoalPercentage;
+    public Double getFga() {
+        return fga;
     }
     
-    public void setFieldGoalPercentage(Double fieldGoalPercentage) {
-        this.fieldGoalPercentage = fieldGoalPercentage;
+    public void setFga(Double fga) {
+        this.fga = fga;
     }
     
-    public Double getThreePointPercentage() {
-        return threePointPercentage;
+    public Double getFgPct() {
+        return fgPct;
     }
     
-    public void setThreePointPercentage(Double threePointPercentage) {
-        this.threePointPercentage = threePointPercentage;
+    public void setFgPct(Double fgPct) {
+        this.fgPct = fgPct;
     }
     
-    public Double getFreeThrowPercentage() {
-        return freeThrowPercentage;
+    public Double getFg3m() {
+        return fg3m;
     }
     
-    public void setFreeThrowPercentage(Double freeThrowPercentage) {
-        this.freeThrowPercentage = freeThrowPercentage;
+    public void setFg3m(Double fg3m) {
+        this.fg3m = fg3m;
     }
     
-    public Double getFantasyPointsPerGame() {
-        return fantasyPointsPerGame;
+    public Double getFg3a() {
+        return fg3a;
     }
     
-    public void setFantasyPointsPerGame(Double fantasyPointsPerGame) {
-        this.fantasyPointsPerGame = fantasyPointsPerGame;
+    public void setFg3a(Double fg3a) {
+        this.fg3a = fg3a;
     }
     
-    public Integer getFantasyRanking() {
-        return fantasyRanking;
+    public Double getFg3Pct() {
+        return fg3Pct;
     }
     
-    public void setFantasyRanking(Integer fantasyRanking) {
-        this.fantasyRanking = fantasyRanking;
+    public void setFg3Pct(Double fg3Pct) {
+        this.fg3Pct = fg3Pct;
     }
-
-    public Integer getGamesPlayed() {
-        return gamesPlayed;
+    
+    public Double getFtm() {
+        return ftm;
     }
-
-    public void setGamesPlayed(Integer gamesPlayed) {
-        this.gamesPlayed = gamesPlayed;
+    
+    public void setFtm(Double ftm) {
+        this.ftm = ftm;
+    }
+    
+    public Double getFta() {
+        return fta;
+    }
+    
+    public void setFta(Double fta) {
+        this.fta = fta;
+    }
+    
+    public Double getFtPct() {
+        return ftPct;
+    }
+    
+    public void setFtPct(Double ftPct) {
+        this.ftPct = ftPct;
+    }
+    
+    public Double getOreb() {
+        return oreb;
+    }
+    
+    public void setOreb(Double oreb) {
+        this.oreb = oreb;
+    }
+    
+    public Double getDreb() {
+        return dreb;
+    }
+    
+    public void setDreb(Double dreb) {
+        this.dreb = dreb;
+    }
+    
+    public Double getReb() {
+        return reb;
+    }
+    
+    public void setReb(Double reb) {
+        this.reb = reb;
+    }
+    
+    public Double getAst() {
+        return ast;
+    }
+    
+    public void setAst(Double ast) {
+        this.ast = ast;
+    }
+    
+    public Double getTov() {
+        return tov;
+    }
+    
+    public void setTov(Double tov) {
+        this.tov = tov;
+    }
+    
+    public Double getStl() {
+        return stl;
+    }
+    
+    public void setStl(Double stl) {
+        this.stl = stl;
+    }
+    
+    public Double getBlk() {
+        return blk;
+    }
+    
+    public void setBlk(Double blk) {
+        this.blk = blk;
+    }
+    
+    public Double getPf() {
+        return pf;
+    }
+    
+    public void setPf(Double pf) {
+        this.pf = pf;
+    }
+    
+    public Double getPts() {
+        return pts;
+    }
+    
+    public void setPts(Double pts) {
+        this.pts = pts;
+    }
+    
+    public Double getPlusMinus() {
+        return plusMinus;
+    }
+    
+    public void setPlusMinus(Double plusMinus) {
+        this.plusMinus = plusMinus;
+    }
+    
+    public Double getNbaFantasyPts() {
+        return nbaFantasyPts;
+    }
+    
+    public void setNbaFantasyPts(Double nbaFantasyPts) {
+        this.nbaFantasyPts = nbaFantasyPts;
+    }
+    
+    @Override
+    public String toString() {
+        return "Player{" +
+                "playerId=" + playerId +
+                ", playerName='" + playerName + '\'' +
+                ", teamAbbreviation='" + teamAbbreviation + '\'' +
+                ", pts=" + pts +
+                ", reb=" + reb +
+                ", ast=" + ast +
+                '}';
     }
 }
