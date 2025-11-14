@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 interface Player {
   id: number;
@@ -21,9 +21,9 @@ interface Player {
 
 export default function PlayersPage() {
   const [players, setPlayers] = useState<Player[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
     fetchPlayers();
@@ -32,13 +32,15 @@ export default function PlayersPage() {
   const fetchPlayers = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8080/api/players');
-      if (!response.ok) throw new Error('Failed to fetch players');
+      const response = await fetch(
+        "https://fantasy-basketball-production.up.railway.app/api/players"
+      );
+      if (!response.ok) throw new Error("Failed to fetch players");
       const data = await response.json();
       setPlayers(data);
-      setError('');
+      setError("");
     } catch (err) {
-      setError('Failed to load players. Make sure the backend is running.');
+      setError("Failed to load players. Make sure the backend is running.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -55,14 +57,16 @@ export default function PlayersPage() {
     try {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:8080/api/players/search?name=${encodeURIComponent(searchTerm)}`
+        `http://localhost:8080/api/players/search?name=${encodeURIComponent(
+          searchTerm
+        )}`
       );
-      if (!response.ok) throw new Error('Search failed');
+      if (!response.ok) throw new Error("Search failed");
       const data = await response.json();
       setPlayers(data);
-      setError('');
+      setError("");
     } catch (err) {
-      setError('Search failed. Please try again.');
+      setError("Search failed. Please try again.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -96,7 +100,7 @@ export default function PlayersPage() {
               <button
                 type="button"
                 onClick={() => {
-                  setSearchTerm('');
+                  setSearchTerm("");
                   fetchPlayers();
                 }}
                 className="px-6 py-3 bg-zinc-700 text-white font-medium rounded-lg hover:bg-zinc-600 transition-colors"
@@ -114,27 +118,57 @@ export default function PlayersPage() {
         )}
 
         {loading ? (
-          <div className="text-center py-12 text-gray-400">Loading players...</div>
+          <div className="text-center py-12 text-gray-400">
+            Loading players...
+          </div>
         ) : players.length === 0 ? (
-          <div className="text-center py-12 text-gray-400">No players found</div>
+          <div className="text-center py-12 text-gray-400">
+            No players found
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
                 <tr className="border-b border-gray-700">
-                  <th className="text-left py-4 px-4 text-sm font-semibold text-gray-400">Player</th>
-                  <th className="text-left py-4 px-4 text-sm font-semibold text-gray-400">Team</th>
-                  <th className="text-left py-4 px-4 text-sm font-semibold text-gray-400">Pos</th>
-                  <th className="text-right py-4 px-4 text-sm font-semibold text-gray-400">GP</th>
-                  <th className="text-right py-4 px-4 text-sm font-semibold text-gray-400">MIN</th>
-                  <th className="text-right py-4 px-4 text-sm font-semibold text-gray-400">PTS</th>
-                  <th className="text-right py-4 px-4 text-sm font-semibold text-gray-400">REB</th>
-                  <th className="text-right py-4 px-4 text-sm font-semibold text-gray-400">AST</th>
-                  <th className="text-right py-4 px-4 text-sm font-semibold text-gray-400">STL</th>
-                  <th className="text-right py-4 px-4 text-sm font-semibold text-gray-400">BLK</th>
-                  <th className="text-right py-4 px-4 text-sm font-semibold text-gray-400">FG%</th>
-                  <th className="text-right py-4 px-4 text-sm font-semibold text-gray-400">3P%</th>
-                  <th className="text-right py-4 px-4 text-sm font-semibold text-gray-400">FT%</th>
+                  <th className="text-left py-4 px-4 text-sm font-semibold text-gray-400">
+                    Player
+                  </th>
+                  <th className="text-left py-4 px-4 text-sm font-semibold text-gray-400">
+                    Team
+                  </th>
+                  <th className="text-left py-4 px-4 text-sm font-semibold text-gray-400">
+                    Pos
+                  </th>
+                  <th className="text-right py-4 px-4 text-sm font-semibold text-gray-400">
+                    GP
+                  </th>
+                  <th className="text-right py-4 px-4 text-sm font-semibold text-gray-400">
+                    MIN
+                  </th>
+                  <th className="text-right py-4 px-4 text-sm font-semibold text-gray-400">
+                    PTS
+                  </th>
+                  <th className="text-right py-4 px-4 text-sm font-semibold text-gray-400">
+                    REB
+                  </th>
+                  <th className="text-right py-4 px-4 text-sm font-semibold text-gray-400">
+                    AST
+                  </th>
+                  <th className="text-right py-4 px-4 text-sm font-semibold text-gray-400">
+                    STL
+                  </th>
+                  <th className="text-right py-4 px-4 text-sm font-semibold text-gray-400">
+                    BLK
+                  </th>
+                  <th className="text-right py-4 px-4 text-sm font-semibold text-gray-400">
+                    FG%
+                  </th>
+                  <th className="text-right py-4 px-4 text-sm font-semibold text-gray-400">
+                    3P%
+                  </th>
+                  <th className="text-right py-4 px-4 text-sm font-semibold text-gray-400">
+                    FT%
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -143,19 +177,43 @@ export default function PlayersPage() {
                     key={player.id}
                     className="border-b border-gray-800 hover:bg-zinc-800 transition-colors"
                   >
-                    <td className="py-4 px-4 text-white font-medium">{player.player_name}</td>
+                    <td className="py-4 px-4 text-white font-medium">
+                      {player.player_name}
+                    </td>
                     <td className="py-4 px-4 text-gray-400">{player.team}</td>
-                    <td className="py-4 px-4 text-gray-400">{player.position}</td>
-                    <td className="py-4 px-4 text-right text-gray-300">{player.games_played}</td>
-                    <td className="py-4 px-4 text-right text-gray-300">{player.minutes.toFixed(1)}</td>
-                    <td className="py-4 px-4 text-right text-white font-medium">{player.points.toFixed(1)}</td>
-                    <td className="py-4 px-4 text-right text-gray-300">{player.rebounds.toFixed(1)}</td>
-                    <td className="py-4 px-4 text-right text-gray-300">{player.assists.toFixed(1)}</td>
-                    <td className="py-4 px-4 text-right text-gray-300">{player.steals.toFixed(1)}</td>
-                    <td className="py-4 px-4 text-right text-gray-300">{player.blocks.toFixed(1)}</td>
-                    <td className="py-4 px-4 text-right text-gray-300">{(player.field_goal_pct * 100).toFixed(1)}%</td>
-                    <td className="py-4 px-4 text-right text-gray-300">{(player.three_point_pct * 100).toFixed(1)}%</td>
-                    <td className="py-4 px-4 text-right text-gray-300">{(player.free_throw_pct * 100).toFixed(1)}%</td>
+                    <td className="py-4 px-4 text-gray-400">
+                      {player.position}
+                    </td>
+                    <td className="py-4 px-4 text-right text-gray-300">
+                      {player.games_played}
+                    </td>
+                    <td className="py-4 px-4 text-right text-gray-300">
+                      {player.minutes.toFixed(1)}
+                    </td>
+                    <td className="py-4 px-4 text-right text-white font-medium">
+                      {player.points.toFixed(1)}
+                    </td>
+                    <td className="py-4 px-4 text-right text-gray-300">
+                      {player.rebounds.toFixed(1)}
+                    </td>
+                    <td className="py-4 px-4 text-right text-gray-300">
+                      {player.assists.toFixed(1)}
+                    </td>
+                    <td className="py-4 px-4 text-right text-gray-300">
+                      {player.steals.toFixed(1)}
+                    </td>
+                    <td className="py-4 px-4 text-right text-gray-300">
+                      {player.blocks.toFixed(1)}
+                    </td>
+                    <td className="py-4 px-4 text-right text-gray-300">
+                      {(player.field_goal_pct * 100).toFixed(1)}%
+                    </td>
+                    <td className="py-4 px-4 text-right text-gray-300">
+                      {(player.three_point_pct * 100).toFixed(1)}%
+                    </td>
+                    <td className="py-4 px-4 text-right text-gray-300">
+                      {(player.free_throw_pct * 100).toFixed(1)}%
+                    </td>
                   </tr>
                 ))}
               </tbody>

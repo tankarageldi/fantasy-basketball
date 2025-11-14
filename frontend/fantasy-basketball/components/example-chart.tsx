@@ -37,16 +37,13 @@ const placeholderData = [
 ];
 
 export default function ChartEx() {
-  const [chartData, setChartData] = useState<
-    { name: string; fantasyPoints: number }[]
-  >(placeholderData);
+  const [chartData, setChartData] =
+    useState<{ name: string; fantasyPoints: number }[]>(placeholderData);
 
   useEffect(() => {
     async function fetchTopPlayers() {
       try {
-        const response = await fetch(
-          "http://localhost:8080/api/players/top-fantasy?limit=10"
-        );
+        const response = await fetch("");
         if (!response.ok) throw new Error("Failed to fetch");
 
         const players: Player[] = await response.json();
@@ -57,7 +54,10 @@ export default function ChartEx() {
 
         setChartData(data);
       } catch (error) {
-        console.error("Failed to fetch top players, using placeholder data:", error);
+        console.error(
+          "Failed to fetch top players, using placeholder data:",
+          error
+        );
         // Keep using placeholder data on error
       }
     }
